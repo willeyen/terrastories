@@ -5,4 +5,9 @@ Rails.application.routes.draw do
   get  'point' => 'home#show'
   post 'point' => 'home#create'
   resources :points
+  resources :stories do
+    collection do
+      get 'search'
+    end
+  end
 end

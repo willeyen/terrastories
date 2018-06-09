@@ -1,0 +1,7 @@
+<h2><%= story.title %></h2>
+<p><%= story.desc %></p>
+<ul class="story-tag-list">
+  <% story.tag_list.each do |tag| %>
+    <li class="story-tag"><%= tag %></li>
+  <% end %>
+</ul>
