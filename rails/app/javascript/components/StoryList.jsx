@@ -16,7 +16,9 @@ class StoryList extends PureComponent {
               <li
                 className={`story storypoint${story.point && story.point.id}`}
               >
-                <div className="thumbnail placeholder" />
+                <div className="speakers">
+                  <img src={story.speaker.picture_url} alt={story.speaker.name} title={story.speaker.name}/>
+                </div>
                 <div className="container">
                   <strong className="title">{story.title}</strong>
                   <div className="description">{story.desc}</div>
