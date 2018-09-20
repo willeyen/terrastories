@@ -32,13 +32,6 @@ window.addEventListener('load', function () {
           .setLngLat(marker.geometry.coordinates)
           .setPopup(popup) // sets a popup on this marker
           .addTo(map);
-
-          el.addEventListener('click', () =>
-            {
-              $(".story").hide();
-              $(".story." + el.id).show();
-            }
-          )
         });
       }
     });
