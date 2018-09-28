@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from "prop-types";
+import StoryList from "./StoryList";
 
 // mapboxgl.accessToken = 'pk.eyJ1Ijoia2FsaW1hciIsImEiOiJjajdhdmNtMjkwbGZlMzJyc2RvNmhjZXd3In0.tBIY2rRDHYt1VYeGTOH98g';
 
@@ -6,9 +8,17 @@ export default class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      points: []
+      points: [],
+      isToggleOn: true
     }
+    this.handleClick = this.handleClick.bind(this);
   }
+
+  handleClick() {
+    this.setState(state => ({
+      isToggleOn: !state.isToggleOn
+    }));
+}
 
   // I wonder if component will receive props is how we want to execute the flyTo
   // if new coords are received then execute the flyTo.
@@ -43,6 +53,8 @@ export default class Map extends Component {
            var el = document.createElement('div');
            el.className = 'marker';
            el.id = 'storypoint' + marker.id;
+           // (".stories").hide();
+           // (".stories." + el.id).show();
            var popup = new mapboxgl
              .Popup({ offset: 15 })
              .setHTML('<h1>' + marker.properties.title + '</h1>' + '<h2>' + marker.properties.region + '</h2>')
@@ -51,13 +63,16 @@ export default class Map extends Component {
            .setLngLat(marker.geometry.coordinates)
            .setPopup(popup) // sets a popup on this marker
            .addTo(this.map);
-
-           el.addEventListener('click', () =>
-           {
-             $(".story").hide();
-             $(".story." + el.id).show();
-           }
-         )
+           // console.log(el.id);
+           // console.log(".stories");
+           // console.log(".stories." + el.id);
+           // console.log(this.state.points);
+           // console.log(.story.storypoint${story.point && story.point.id});
+           // (this.state.points).hide;
+           // (".stories").hide();
+           // (".stories." + el.id).show();
+      
+       
         });
       });
     }
