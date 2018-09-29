@@ -9,9 +9,6 @@ class PointDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     stories: Field::HasMany,
-    taggings: Field::HasMany.with_options(class_name: "::ActsAsTaggableOn::Tagging"),
-    base_tags: Field::HasMany.with_options(class_name: "::ActsAsTaggableOn::Tag"),
-    tag_taggings: Field::HasMany.with_options(class_name: "ActsAsTaggableOn::Tagging"),
     tags: Field::HasMany.with_options(class_name: "ActsAsTaggableOn::Tag"),
     id: Field::Number,
     title: Field::String,
@@ -19,6 +16,7 @@ class PointDashboard < Administrate::BaseDashboard
     lat: Field::String.with_options(searchable: false),
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
+    place: Field::BelongsTo,
     region: Field::String,
   }.freeze
 
@@ -28,27 +26,27 @@ class PointDashboard < Administrate::BaseDashboard
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = [
-    :stories,
-    :taggings,
-    :base_tags,
-    :tag_taggings,
+    :id,
+    :title,
+    :lng,
+    :lat,
+    :region,
+    :place,
+    :stories
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = [
-    :stories,
-    :taggings,
-    :base_tags,
-    :tag_taggings,
-    :tags,
     :id,
     :title,
     :lng,
     :lat,
+    :region,
+    :place,
+    :stories,
     :created_at,
     :updated_at,
-    :region,
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -56,10 +54,6 @@ class PointDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
     :stories,
-    :taggings,
-    :base_tags,
-    :tag_taggings,
-    :tags,
     :title,
     :lng,
     :lat,

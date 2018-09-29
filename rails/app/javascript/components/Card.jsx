@@ -1,7 +1,7 @@
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
 import StoryList from "./StoryList";
 
-class Card extends PureComponent {
+class Card extends Component {
 
   constructor(props){
     super(props);
@@ -23,9 +23,8 @@ class Card extends PureComponent {
         &times;
         </div>
         <div className="card--logo">
-          <img src="assets/logocombo.svg" alt="Terrastories" />
+          <img src={this.props.logo_path} alt="Terrastories" />
         </div>
- 
 
         <form name="search" className="card--search" method="post">
           <input type="search" placeholder="Search Terrastories" className="search--field"></input>
@@ -33,13 +32,13 @@ class Card extends PureComponent {
 
         <div className="card--nav">
           <ul>
-            <li><a href="#">Filter 1 ⌄</a></li>
+            <li><a href="#" onClick={() => this.props.handleFilter('Region', 'Kumiade')}>Filter 1 ⌄</a></li>
             <li><a href="#">Filter 2 ⌄</a></li>
             <li><a href="#">Filter 3 ⌄</a></li>
           </ul>
         </div>
 
-        <StoryList stories={this.props.stories} />
+        <StoryList stories={this.props.stories} onStoryClick={this.props.onCardClick}/>
 
         <div className="card--tasks">
           <ul>
