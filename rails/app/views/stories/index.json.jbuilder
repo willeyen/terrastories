@@ -11,3 +11,7 @@ json.stories @stories do |story|
   end
 end
 json.logo_path image_path("logocombo.svg")
+
+if @more_stories
+  json.nextHref stories_path(page_num: params[:page_num].to_i + 1)
+end

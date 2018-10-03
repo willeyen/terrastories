@@ -14,5 +14,9 @@ class Story < ApplicationRecord
     end
   end
 
+  def self.json_page(page_size: 10, page_num: 0)
+    limit(page_size).offset(page_size * page_num)
+  end
+
   enum permission_level: [:anonymous, :user_only, :editor_only]
 end

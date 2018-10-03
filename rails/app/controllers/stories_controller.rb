@@ -1,6 +1,11 @@
 class StoriesController < ApplicationController
   def index
-    @stories = Story.all
+    if params[:page_num].present?
+      @stories = Story.json_page(page_num: params[:page_num].to_i)
+      @more_stories = (Story.count / 10) > params[:page_num].to_i
+    else
+      @stories = Story.all
+    end
     respond_to do |format|
       format.json
     end
