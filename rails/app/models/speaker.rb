@@ -1,7 +1,7 @@
 # == Schema Information ==
 #
 # Table name: speakers
-# 
+#
 # id          ... not null primary key
 # speaker_name... string
 # birth_year  ... datetime, nil if blank
