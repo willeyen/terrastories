@@ -1,77 +1,70 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+require 'faker'
+## Script to generate large quantities of seed data for dev 
+## Stories, Places, Speakers w/ media fields + relationships
+## run via docker command 
 
-# Create Places
-rfg2018 = Place.find_or_create_by(name: "Georgetown University", type_of_place: 'college campus', long: -77.073168, lat: 38.906302, region: "Washington DC")
-rbtb2019 = Place.find_or_create_by(name: "NatureBridge Campus", type_of_place: 'nonprofit campus', long: -122.537419, lat: 37.832257, region: "California")
+# PLACES
+# t.string "name"
+# t.string "type_of_place"
+# t.datetime "created_at", null: false
+# t.datetime "updated_at", null: false
+# t.decimal "lat", precision: 10, scale: 6
+# t.decimal "long", precision: 10, scale: 6
+# t.string "region"
+# t.string "description"
 
-# Create Speakers
-miranda = Speaker.find_or_create_by(name: "Miranda Wang")
-kalimar = Speaker.find_or_create_by(name: "Kalimar Maia")
-rudo = Speaker.find_or_create_by(name: "Rudo Kemper")
-corinne = Speaker.find_or_create_by(name: "Corinne Henk")
+places_list = Array.new
 
-# Create Stories
-miranda_story = Story.find_or_create_by(title: "Miranda's testimonial",
-                    desc: "Ruby for Good 2018 team lead Miranda Wang about why she values working on Terrastories.",
-                    places: [rfg2018],
-                    language: 'English',
-                    permission_level: 0,
-                    interview_location_id: rfg2018.id,
-                    interviewer_id: corinne.id)
-
-
-rudo_story = Story.find_or_create_by(title: "Rudo's testimonial",
-                    desc: "ACT program manager Rudo Kemper discusses why the organization decided to start building Terrastories to support local communities retain their oral history traditions.",
-                    places: [rbtb2019],
-                    language: 'English',
-                    permission_level: 0,
-                    interviewer_id: kalimar.id,
-                    interview_location_id: rbtb2019.id)
-
-kalimar_story = Story.find_or_create_by(title: "Kalimar's testimonial",
-                    desc: "Mapbox sales engineer Kalimar Maia on why it is important for a company like Mapbox to support open source projects like Terrastories.",
-                    places: [rfg2018],
-                    language: 'English',
-                    permission_level: 1,
-                    interviewer_id: miranda.id,
-                    interview_location_id: rfg2018.id)
-
-corinne_story = Story.find_or_create_by(title: "Corinne's testimonial",
-                    desc: "Corinne Henk, Ruby by the Bay 2019 team lead, describes some of the challenges her team faced and what they managed to accomplish.",
-                    places: [rbtb2019],
-                    language: 'English',
-                    permission_level: 0,
-                    interviewer_id: rudo.id,
-                    interview_location_id: rbtb2019.id)
-
-shared_story = Story.find_or_create_by(title: "Terrastories Team testimonial",
-                    desc: "The team tells all",
-                    places: [rfg2018],
-                    language: 'English',
-                    permission_level: 1,
-                    interview_location_id: rfg2018.id)
-
-# Associate speakers with their stories
-SpeakerStory.find_or_create_by(speaker_id: miranda.id, story_id: miranda_story.id)
-SpeakerStory.find_or_create_by(speaker_id: rudo.id, story_id: rudo_story.id)
-SpeakerStory.find_or_create_by(speaker_id: kalimar.id, story_id: kalimar_story.id)
-SpeakerStory.find_or_create_by(speaker_id: corinne.id, story_id: corinne_story.id)
-
-# Associate all speakers w/ the shared story
-SpeakerStory.find_or_create_by(speaker_id: miranda.id, story_id: shared_story.id)
-SpeakerStory.find_or_create_by(speaker_id: rudo.id,    story_id: shared_story.id)
-SpeakerStory.find_or_create_by(speaker_id: kalimar.id, story_id: shared_story.id)
-SpeakerStory.find_or_create_by(speaker_id: corinne.id, story_id: shared_story.id)
-
-# Create a default admin user
-User.find_or_create_by!(email: 'admin@terrastories.com') do |admin|  
-  admin.password = 'terrastories'
-  admin.password_confirmation = 'terrastories'
-  admin.role = 1
+100.times do
+  places_list << Array.new(Faker::Address.city, 'city', Faker::Address.latitude, Faker::Address.longitude, Faker::Lorem.sentence(word_count: 5))
 end
+
+places_list.each do |name, type_of_place, lat, long, region, description|
+  Place.find_or_create_by(name: name, type_of_place: type_of_place, lat: lat, long: long, region: region, description: description)
+end
+
+# SPEAKERS
+# t.string "name"
+# t.string "photo"
+# t.datetime "created_at", null: false
+# t.datetime "updated_at", null: false
+# t.datetime "birthdate"
+# t.integer "birthplace_id" ==> place
+# t.string "community"
+
+speaker_list = Array.new 
+
+100.times do
+  speaker_list << Array.new(Faker::Name.unique.name, DateTime.new([*1930...2015].sample), Faker::Address.community)
+end
+
+speaker_list.each do |name, birthdate, community|
+  place = Place.order('RANDOM()').first
+  Speaker.find_or_create_by(name: name, birthdate: birthdate, community: community, birthplace_id: place.id)
+end
+
+#STORIES
+# t.string "title"
+# t.text "desc"
+# t.datetime "created_at", null: false
+# t.datetime "updated_at", null: false
+# t.integer "permission_level"
+# t.datetime "date_interviewed"
+# t.string "language"
+# t.integer "interview_location_id" ==> place
+# t.integer "interviewer_id" ==> speaker
+
+story_list = Array.new
+
+100.times do
+  story_list << Array.new(Faker::Book.title, Faker::Lorem.sentence, rand(0...5), DateTime.new(), Faker::Nation.language)
+end
+
+story_list.each do |title, desc, permission_level, date_interviewed, language|
+  speaker = Speaker.order('RANDOM()').first
+  story = Story.find_or_create_by(title: title, desc: desc, permission_level: permission_level, date_interviewed: date_interviewed, language: language, interview_location: Place.order('RANDOM()').first, interviewer_id: speaker.id)
+  SpeakerStory.find_or_create_by(speaker_id: speaker.id, story_id: story.id)
+end
+
+# places_stories
+#story_id, place_id
